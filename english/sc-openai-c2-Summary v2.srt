@@ -1,0 +1,77 @@
+1
+00:00:00,000 --> 00:00:03,600
+Congratulations and thank you for getting to the end of this short course.
+
+2
+00:00:04,080 --> 00:00:07,280
+As we conclude the course, let's recap the main topics we covered.
+
+3
+00:00:07,880 --> 00:00:12,880
+We went over details of how an llm works, including subtleties like the tokenizer
+
+4
+00:00:12,880 --> 00:00:15,000
+and why it can't reverse lollipop.
+
+5
+00:00:15,640 --> 00:00:19,520
+We learned methods for evaluating user inputs to ensure the quality and safety
+
+6
+00:00:19,520 --> 00:00:23,920
+of the system, processing inputs using both chain of thought reasoning and
+
+7
+00:00:23,920 --> 00:00:27,720
+splitting tasks into subtasks with chain prompts and checking outputs
+
+8
+00:00:27,720 --> 00:00:29,240
+before showing them to users.
+
+9
+00:00:29,240 --> 00:00:34,080
+We also took a look at methods for evaluating the system over time, so as
+
+10
+00:00:34,080 --> 00:00:36,400
+to monitor and improve its performance.
+
+11
+00:00:37,080 --> 00:00:40,120
+Throughout the course, we also discussed the importance of building responsibly
+
+12
+00:00:40,120 --> 00:00:43,560
+with these tools, ensuring that the model is safe and provides appropriate
+
+13
+00:00:43,560 --> 00:00:46,680
+responses that are accurate, relevant, and in the tone you want.
+
+14
+00:00:47,200 --> 00:00:49,800
+As always, practice is key to mastering these concepts.
+
+15
+00:00:50,000 --> 00:00:52,640
+So we hope you'll apply what you've learned in your own projects.
+
+16
+00:00:53,560 --> 00:00:55,000
+And so that's it.
+
+17
+00:00:55,160 --> 00:00:58,720
+There are so many exciting applications that are yet to be built.
+
+18
+00:00:58,720 --> 00:01:03,000
+The world needs more people like you building useful applications, and we
+
+19
+00:01:03,000 --> 00:01:28,720
+look forward to hearing about the amazing things you build.
+
+

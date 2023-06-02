@@ -1,0 +1,489 @@
+1
+00:00:00,000 --> 00:00:11,440
+In the last video, you saw how to evaluate an llm output in an example where it had the
+
+2
+00:00:11,440 --> 00:00:18,040
+right answer and so could write down a function to explicitly just tell us if the llm outputs
+
+3
+00:00:18,040 --> 00:00:21,280
+the right categories and list of products.
+
+4
+00:00:21,280 --> 00:00:26,400
+But what if the llm is used to generate text and there isn't just one right piece of text?
+
+5
+00:00:26,400 --> 00:00:31,880
+Let's take a look at an approach for how to evaluate that type of llm output.
+
+6
+00:00:31,880 --> 00:00:37,040
+Here's my usual helper functions and given a customer message, tell me about the Smart
+
+7
+00:00:37,040 --> 00:00:40,240
+X Pro phone and the full-stack camera and so on.
+
+8
+00:00:40,240 --> 00:00:44,600
+Here are a few utils to get me the assistant answer.
+
+9
+00:00:44,600 --> 00:00:48,480
+This is basically the process that Yizer has stepped through in earlier videos.
+
+10
+00:00:48,480 --> 00:00:50,040
+And so here's the assistant answer.
+
+11
+00:00:50,040 --> 00:00:58,880
+Sure, we have a whole smartphone, the Smart X Pro phone and so on and so forth.
+
+12
+00:00:58,880 --> 00:01:04,520
+So how can you evaluate if this is a good answer or not?
+
+13
+00:01:04,520 --> 00:01:07,880
+Seems like there are lots of possible good answers.
+
+14
+00:01:07,880 --> 00:01:16,560
+One way to evaluate this is to write a rubric, meaning a set of guidelines to evaluate this
+
+15
+00:01:16,560 --> 00:01:21,560
+answer on different dimensions and then use that to decide whether or not you're satisfied
+
+16
+00:01:21,560 --> 00:01:22,560
+with this answer.
+
+17
+00:01:22,560 --> 00:01:26,040
+Let me show you how to do that.
+
+18
+00:01:26,040 --> 00:01:29,680
+So let me create a little data structure to store the customer message as well as the
+
+19
+00:01:29,680 --> 00:01:31,480
+product info.
+
+20
+00:01:31,480 --> 00:01:38,200
+So here I'm going to specify a prompt for evaluating the assistant answer using what's
+
+21
+00:01:38,200 --> 00:01:39,200
+called a rubric.
+
+22
+00:01:39,200 --> 00:01:41,200
+I'll explain in a second what that means.
+
+23
+00:01:41,200 --> 00:01:45,040
+But this prompt says, in the system message, you're an assistant that evaluates how well
+
+24
+00:01:45,040 --> 00:01:49,520
+the customer service agent answers the user question by looking at the context that the
+
+25
+00:01:49,520 --> 00:01:52,200
+customer service agent is using to generate a response.
+
+26
+00:01:52,200 --> 00:01:55,880
+So this response is what we had further up the notebook.
+
+27
+00:01:55,880 --> 00:01:58,480
+That was the assistant answer.
+
+28
+00:01:58,480 --> 00:02:03,520
+And we're going to specify the data in this prompt, what was the customer message, what
+
+29
+00:02:03,520 --> 00:02:08,760
+was the context, that is, what was the product and category information that was provided,
+
+30
+00:02:08,760 --> 00:02:11,240
+and then what was the output of the LLM.
+
+31
+00:02:11,240 --> 00:02:12,600
+And then this is a rubric.
+
+32
+00:02:12,600 --> 00:02:16,360
+So we want the LLM to compare the factual content and the submitted answer to the content,
+
+33
+00:02:16,360 --> 00:02:19,200
+ignore differences in style, grammar, punctuation.
+
+34
+00:02:19,200 --> 00:02:23,160
+And then we want it to check a few things, like is the assistant response based only
+
+35
+00:02:23,160 --> 00:02:25,200
+on the context provided?
+
+36
+00:02:25,200 --> 00:02:28,800
+Does the answer include information that is not provided in the context?
+
+37
+00:02:28,800 --> 00:02:31,980
+Is there any disagreement between the response and the context?
+
+38
+00:02:31,980 --> 00:02:39,240
+So this is called a rubric, and this specifies what we think the answer should get right
+
+39
+00:02:39,240 --> 00:02:42,840
+for us to consider it a good answer.
+
+40
+00:02:42,840 --> 00:02:50,320
+Then finally, we want it to print out yes or no, and so on.
+
+41
+00:02:50,320 --> 00:02:59,560
+And now, if we were to run this evaluation, this is what you get.
+
+42
+00:02:59,560 --> 00:03:03,280
+So it says the assistant response is based on the context provided.
+
+43
+00:03:03,280 --> 00:03:06,600
+It does not, in this case, seem to make up new information.
+
+44
+00:03:06,600 --> 00:03:07,600
+There isn't disagreements.
+
+45
+00:03:07,600 --> 00:03:11,760
+The user asked two questions, answered question one and answered question two, so it answered
+
+46
+00:03:11,760 --> 00:03:14,120
+both questions.
+
+47
+00:03:14,120 --> 00:03:20,200
+So we would look at this output and maybe conclude that this is a pretty good response.
+
+48
+00:03:20,200 --> 00:03:28,800
+And one note, here I'm using the Chai GPT 3.5 Turbo model for this evaluation.
+
+49
+00:03:28,800 --> 00:03:34,680
+For a more robust evaluation, it might be worth considering using GPT-4, because even
+
+50
+00:03:34,680 --> 00:03:41,680
+if you deploy 3.5 Turbo in production and generate a lot of text, if your evaluation
+
+51
+00:03:41,680 --> 00:03:49,440
+is a more sporadic exercise, then it may be prudent to pay for the somewhat more expensive
+
+52
+00:03:49,440 --> 00:03:55,320
+GPT-4 API call to get a more rigorous evaluation of the output.
+
+53
+00:03:55,320 --> 00:03:58,880
+One design pattern that I hope you can take away from this is that when you can specify
+
+54
+00:03:58,880 --> 00:04:06,680
+a rubric, meaning a list of criteria by which to evaluate an LLM output, then you can actually
+
+55
+00:04:06,680 --> 00:04:12,440
+use another API call to evaluate your first LLM output.
+
+56
+00:04:12,440 --> 00:04:19,200
+There's one other design pattern that could be useful for some applications, which is
+
+57
+00:04:19,200 --> 00:04:23,000
+if you can specify an ideal response.
+
+58
+00:04:23,000 --> 00:04:28,080
+So here I'm going to specify a test example where the customer message is, tell me about
+
+59
+00:04:28,080 --> 00:04:31,120
+the SmartX profile, and so on.
+
+60
+00:04:31,120 --> 00:04:32,840
+And here's an ideal answer.
+
+61
+00:04:32,840 --> 00:04:38,240
+So this is if you have an expert human customer service representative write a really good
+
+62
+00:04:38,240 --> 00:04:39,240
+answer.
+
+63
+00:04:39,240 --> 00:04:41,600
+The expert says, this would be a great answer.
+
+64
+00:04:41,600 --> 00:04:44,200
+Of course, the SmartX profile, and so on.
+
+65
+00:04:44,200 --> 00:04:47,960
+And goes on to give a lot of helpful information.
+
+66
+00:04:47,960 --> 00:04:54,640
+Now it is unreasonable to expect any LLM to generate this exact answer word for word.
+
+67
+00:04:54,640 --> 00:04:59,840
+And in classical natural language processing techniques, there are some traditional metrics
+
+68
+00:04:59,840 --> 00:05:06,320
+for measuring if the LLM output is similar to this expert human written output.
+
+69
+00:05:06,320 --> 00:05:10,960
+For example, there's something called the BLU score, B-L-E-U, that you can search online
+
+70
+00:05:10,960 --> 00:05:12,360
+to read more about.
+
+71
+00:05:12,360 --> 00:05:17,760
+They can measure how similar one piece of text is from another.
+
+72
+00:05:17,760 --> 00:05:25,600
+And it turns out there's an even better way, which is you can use a prompt, which I'm going
+
+73
+00:05:25,600 --> 00:05:31,480
+to specify here, to ask an LLM to compare how well the automatically generated customer
+
+74
+00:05:31,480 --> 00:05:37,640
+service agent output corresponds to the ideal expert response that was written by a human
+
+75
+00:05:37,640 --> 00:05:41,320
+that I just showed up above.
+
+76
+00:05:41,320 --> 00:05:47,280
+Here's the prompt we can use, which is we're going to use an LLM and tell it to be an assistant
+
+77
+00:05:47,280 --> 00:05:51,600
+that evaluates how well the customer service agent answers the user question by comparing
+
+78
+00:05:51,600 --> 00:05:58,360
+the response that was the automatically generated one to the ideal expert human written response.
+
+79
+00:05:58,360 --> 00:06:03,520
+And so we're going to give it the data, which is what was the customer request, what was
+
+80
+00:06:03,520 --> 00:06:09,280
+the expert written ideal response, and then what did our LLM actually output.
+
+81
+00:06:09,280 --> 00:06:15,480
+And this rubric comes from the OpenAI open source evals framework, which is a fantastic
+
+82
+00:06:15,480 --> 00:06:22,320
+framework with many evaluation methods contributed both by OpenAI developers and by the broader
+
+83
+00:06:22,320 --> 00:06:23,320
+open source community.
+
+84
+00:06:23,320 --> 00:06:29,640
+In fact, if you want, you could contribute an eval to that framework yourself to help
+
+85
+00:06:29,640 --> 00:06:32,840
+others evaluate their large language model outputs.
+
+86
+00:06:32,840 --> 00:06:38,400
+So in this rubric, we tell the LLM to compare the factual content of the submitted answer
+
+87
+00:06:38,400 --> 00:06:44,000
+with the expert answer, ignore differences in style, grammar, punctuation, and feel free
+
+88
+00:06:44,000 --> 00:06:46,880
+to pause the video and read through this in detail.
+
+89
+00:06:46,880 --> 00:06:54,320
+But the key is we ask it to carry the comparison and output a score from A to E, depending
+
+90
+00:06:54,320 --> 00:06:59,480
+on whether the submitted answer is a subset of the expert answer and is fully consistent
+
+91
+00:06:59,480 --> 00:07:04,440
+versus the submitted answer is a superset of the expert answer, but it's fully consistent
+
+92
+00:07:04,440 --> 00:07:05,440
+with it.
+
+93
+00:07:05,440 --> 00:07:08,640
+This might mean it hallucinated or made up some additional facts.
+
+94
+00:07:08,640 --> 00:07:16,600
+Submitted answer contains all the details as a expert answer, whether there's disagreement
+
+95
+00:07:16,600 --> 00:07:22,880
+or whether the answers differ, but these differences don't matter from the perspective of actuality.
+
+96
+00:07:22,880 --> 00:07:27,100
+And the LLM will pick whichever of these seems to be the most appropriate description.
+
+97
+00:07:27,100 --> 00:07:29,520
+So here's the assistant answer that we had just now.
+
+98
+00:07:29,520 --> 00:07:33,720
+I think it's a pretty good answer, but now let's see what the things when it compares
+
+99
+00:07:33,720 --> 00:07:36,000
+the assistant answer to test set ID.
+
+100
+00:07:36,000 --> 00:07:41,960
+Ooh, looks like it got an A. And so it thinks the submitted answer is a subset of the expert
+
+101
+00:07:41,960 --> 00:07:44,400
+answer and is fully consistent with it.
+
+102
+00:07:44,400 --> 00:07:45,400
+And that sounds right to me.
+
+103
+00:07:45,400 --> 00:07:50,280
+This assistant answer is much shorter than the long expert answer up top, but it does
+
+104
+00:07:50,280 --> 00:07:51,280
+hopefully is consistent.
+
+105
+00:07:51,280 --> 00:07:59,000
+Once again, I'm using GPT 3.5 turbo in this example, but to get a more rigorous evaluation,
+
+106
+00:07:59,000 --> 00:08:04,400
+it might make sense to use GPT 4 in your own application.
+
+107
+00:08:04,400 --> 00:08:06,160
+Now let's try something totally different.
+
+108
+00:08:06,160 --> 00:08:10,400
+I'm going to have a very different assistant answer.
+
+109
+00:08:10,400 --> 00:08:15,560
+Life is like a box of chocolate, quote from a movie called Forrest Gump.
+
+110
+00:08:15,560 --> 00:08:23,640
+And if we were to evaluate that, it outputs D and it concludes that there's a disagreement
+
+111
+00:08:23,640 --> 00:08:28,320
+between submitted answer, life is like a box of chocolate, and the expert answer.
+
+112
+00:08:28,320 --> 00:08:32,160
+So it correctly assesses this to be a pretty terrible answer.
+
+113
+00:08:32,160 --> 00:08:33,360
+And so that's it.
+
+114
+00:08:33,360 --> 00:08:38,120
+I hope you take away from this video two design patterns.
+
+115
+00:08:38,120 --> 00:08:44,840
+First is even without an expert provided ideal answer, if you can write a rubric, you can
+
+116
+00:08:44,840 --> 00:08:48,720
+use one LLM to evaluate another LLM's output.
+
+117
+00:08:48,720 --> 00:08:55,600
+And second, if you can provide an expert provided ideal answer, then that can help your LLM
+
+118
+00:08:55,600 --> 00:09:03,320
+better compare if a specific assistant output is similar to the expert provided ideal answer.
+
+119
+00:09:03,320 --> 00:09:12,440
+I hope that helps you to evaluate your LLM systems outputs so that both during development
+
+120
+00:09:12,440 --> 00:09:17,800
+as well as when the system is running and you're getting responses, you can continue
+
+121
+00:09:17,800 --> 00:09:24,520
+to monitor its performance and also have these tools to continuously evaluate and keep on
+
+122
+00:09:24,520 --> 00:09:34,520
+improving the performance of your system.
+
+
